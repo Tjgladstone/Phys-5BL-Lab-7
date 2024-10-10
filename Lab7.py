@@ -11,7 +11,6 @@ from scipy.interpolate import interp1d
 import matplotlib
 import matplotlib.pyplot as plt
 file = open(file_path, 'r')
-print(file.read())
 tx, Fdata, pos_data  = np.loadtxt(file_path, delimiter=",", skiprows=1, usecols=(0,1,2), unpack=True)
 f, axarr = plt.subplots(2, sharex=True)
 plt.xlim(12, 32)
@@ -60,16 +59,15 @@ import scipy.optimize as opt
 from scipy.interpolate import interp1d
 import matplotlib
 import matplotlib.pyplot as plt
-file_path = "/Users/trevorgladstone/Desktop/60deg.csv"
+file_path = "/Users/trevorgladstone/Desktop/90deg.csv"
 file = open(file_path, 'r')
-print(file.read())
 tx, aydata, Fdata = np.loadtxt(file_path, delimiter=",", skiprows=1, usecols=(0,2,4), unpack=True)
 f, axarr = plt.subplots(2, sharex=True)
 start_time = 10
 stop_time = 32
 tvals = np.arange(start_time, stop_time)
 axarr[0].plot(tx, aydata,'r', label="accelerometer")
-axarr[0].set_title('60 degree silver spring harmonic oscillator')
+axarr[0].set_title('90 degree silver spring harmonic oscillator')
 axarr[0].set_ylabel('Accelerometer (m/s2)')
 axarr[1].plot(tx, Fdata)
 axarr[1].set_xlabel('time (s)')
@@ -86,25 +84,192 @@ yvals = yinterp(tvals)
 plt.plot(tvals, yvals)
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
-plt.title("Harmonic Motion Data")
+plt.title("Harmonic Motion Data 90°")
 plt.show()
 def simple_a(t, A, B, w, phi):
     return B - A * (w**2) * np.cos(w*t + phi)
 oscillator_model = simple_a
-Ainit, Binit, winit, phiinit, =[0.054, -9.8, 8.2, 1.1]
+Ainit, Binit, winit, phiinit, =[4.63975648e-02, -9.77158085e+00, 8.14193246e+00, 3.22244364e+00]
 plt.plot(tvals-start_time, oscillator_model(tvals-start_time, Ainit, Binit, winit, phiinit), color='orange')
 plt.scatter(tvals-start_time, yvals)
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
-plt.title("Simple Harmonic Motion Fit")
+plt.title("Simple Harmonic Motion Fit 90°")
+plt.show()
+start_pars=[Ainit, Binit, winit, phiinit]
+pars, cov = opt.curve_fit(oscillator_model, tvals-start_time, yvals, p0=start_pars)
+[A, B, w, phi] = pars
+std_errs = np.sqrt(np.diag(cov))
+print(np.transpose([pars, std_errs]))
+ypred = oscillator_model(tvals-start_time, A, B, w, phi)
+fig1=plt.figure(figsize=(8, 8), dpi= 80, facecolor='w', edgecolor='k')
+plt.rcParams.update({'font.size': '16'})
+plt.scatter(tvals, yvals)
+plt.plot(tvals, ypred, color='orange')
+plt.title("Simple Harmonic Motion Fit 90°")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (appropriate units)")
 plt.show()
 def vdamped_a(t, A, B, w, phi, beta):
     return B + A * np.exp(-beta*t) * ((beta**2-w**2)*np.cos(w*t + phi)+2*beta*w*np.sin(w*t+phi))
 oscillator_model = vdamped_a
-Ainit, Binit, winit, phiinit, betainit=[0.054, -9.8, 8.2, 1.1, 0.01205]
+Ainit, Binit, winit, phiinit, betainit=[5.25438945e-02, -9.77170593e+00, 8.14222270e+00, 3.21731325e+00, 1.15502142e-02]
 plt.plot(tvals-start_time, oscillator_model(tvals-start_time, Ainit, Binit, winit, phiinit, betainit), color='orange')
 plt.scatter(tvals-start_time, yvals)
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
-plt.title("Damped Harmonic Motion Fit")
+plt.title("Damped Harmonic Motion Fit 90°")
+plt.show()
+start_pars=[Ainit, Binit, winit, phiinit, betainit]
+pars, cov = opt.curve_fit(oscillator_model, tvals-start_time, yvals, p0=start_pars)
+[A, B, w, phi, beta] = pars
+std_errs = np.sqrt(np.diag(cov))
+print(np.transpose([pars, std_errs]))
+ypred = oscillator_model(tvals-start_time, A, B, w, phi, beta)
+fig1=plt.figure(figsize=(8, 8), dpi= 80, facecolor='w', edgecolor='k')
+plt.rcParams.update({'font.size': '16'})
+plt.scatter(tvals, yvals)
+plt.plot(tvals, ypred, color='orange')
+plt.title("Damped Harmonic Motion Fit 90°")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (appropriate units)")
+plt.show()
+
+#Harmonic Oscillation (60 degree case)
+file_path = "/Users/trevorgladstone/Desktop/60deg.csv"
+file = open(file_path, 'r')
+tx, aydata, Fdata = np.loadtxt(file_path, delimiter=",", skiprows=1, usecols=(0,1,2), unpack=True)
+f, axarr = plt.subplots(2, sharex=True)
+start_time = 4.75
+stop_time = 10.5
+tvals = np.arange(start_time, stop_time)
+axarr[0].plot(tx, aydata,'r', label="accelerometer")
+axarr[0].set_title('60 degree silver spring harmonic oscillator')
+axarr[0].set_ylabel('Accelerometer (m/s2)')
+axarr[1].plot(tx, Fdata)
+axarr[1].set_xlabel('time (s)')
+axarr[1].set_ylabel('Force (N)')
+plt.xlabel("Time(s)")
+plt.ylabel("Acceleration m/s^2")
+plt.show()
+yinterp = interp1d(tx, aydata, kind="linear")
+start_time = 4.75
+stop_time = 10.5
+step_size = 0.001
+tvals = np.arange(start_time, stop_time, step_size)  
+yvals = yinterp(tvals)
+plt.plot(tvals, yvals)
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (m/s^2)")
+plt.title("Harmonic Motion Data 90°")
+plt.show()
+def simple_a(t, A, B, w, phi):
+    return B - A * (w**2) * np.cos(w*t + phi)
+oscillator_model = simple_a
+Ainit, Binit, winit, phiinit, =[4.24954614e-02, -7.76388156e+00, 8.19655461e+00, 7.75128295e+00]
+plt.plot(tvals-start_time, oscillator_model(tvals-start_time, Ainit, Binit, winit, phiinit), color='orange')
+plt.scatter(tvals-start_time, yvals)
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (m/s^2)")
+plt.title("Simple Harmonic Motion Fit 60°")
+plt.show()
+start_pars=[Ainit, Binit, winit, phiinit]
+pars, cov = opt.curve_fit(oscillator_model, tvals-start_time, yvals, p0=start_pars)
+[A, B, w, phi] = pars
+std_errs = np.sqrt(np.diag(cov))
+print(np.transpose([pars, std_errs]))
+ypred = oscillator_model(tvals-start_time, A, B, w, phi)
+fig1=plt.figure(figsize=(8, 8), dpi= 80, facecolor='w', edgecolor='k')
+plt.rcParams.update({'font.size': '16'})
+plt.scatter(tvals, yvals)
+plt.plot(tvals, ypred, color='orange')
+plt.title("Simple Harmonic Motion Fit 60°")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (appropriate units)")
+plt.show()
+def vdamped_a(t, A, B, w, phi, beta):
+    return B + A * np.exp(-beta*t) * ((beta**2-w**2)*np.cos(w*t + phi)+2*beta*w*np.sin(w*t+phi))
+oscillator_model = vdamped_a
+Ainit, Binit, winit, phiinit, betainit=[-9.00788245e-02, -7.79311098e+00, 8.18519423e+00, 4.53888720e+00, 2.97927399e-01]
+plt.plot(tvals-start_time, oscillator_model(tvals-start_time, Ainit, Binit, winit, phiinit, betainit), color='orange')
+plt.scatter(tvals-start_time, yvals)
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (m/s^2)")
+plt.title("Damped Harmonic Motion Fit 60°")
+plt.show()
+start_pars=[Ainit, Binit, winit, phiinit, betainit]
+pars, cov = opt.curve_fit(oscillator_model, tvals-start_time, yvals, p0=start_pars)
+[A, B, w, phi, beta] = pars
+std_errs = np.sqrt(np.diag(cov))
+print(np.transpose([pars, std_errs]))
+ypred = oscillator_model(tvals-start_time, A, B, w, phi, beta)
+fig1=plt.figure(figsize=(8, 8), dpi= 80, facecolor='w', edgecolor='k')
+plt.rcParams.update({'font.size': '16'})
+plt.scatter(tvals, yvals)
+plt.plot(tvals, ypred, color='orange')
+plt.title("Damped Harmonic Motion Fit 60°")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (appropriate units)")
+plt.show()
+import numpy as np
+import scipy.optimize as opt
+from scipy.interpolate import interp1d
+import matplotlib
+import matplotlib.pyplot as plt
+file_path = "/Users/trevorgladstone/Desktop/60deg.csv"
+file = open(file_path, 'r')
+tx, aydata, Fdata = np.loadtxt(file_path, delimiter=",", skiprows=1, usecols=(0,1,2), unpack=True)
+f, axarr = plt.subplots(2, sharex=True)
+axarr[0].plot(tx, aydata,'r', label="accelerometer")
+axarr[0].set_title('60 degree silver spring harmonic oscillator')
+axarr[0].set_ylabel('Accelerometer (m/s2)')
+axarr[1].plot(tx, Fdata)
+axarr[1].set_xlabel('time (s)')
+axarr[1].set_ylabel('Force (N)')
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (m/s^2)")
+plt.title("Harmonic Motion Data 60°")
+plt.show()
+yinterp = interp1d(tx, aydata, kind="linear")
+start_time = 4.75
+stop_time = 10.5
+step_size = 0.015
+tvals = np.arange(start_time, stop_time, step_size)  
+yvals = yinterp(tvals)
+plt.plot(tvals, yvals)
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (m/s^2)")
+plt.title("Harmonic Motion Data 60°")
+plt.show()
+from scipy.signal import argrelextrema as get_extrema_indices
+neighborhood_size = 5
+max_indices = get_extrema_indices(yvals, np.greater, order=neighborhood_size)
+min_indices = get_extrema_indices(yvals, np.less, order=neighborhood_size)
+print
+print("Maxima found: ", np.size(max_indices))
+print("Minima found: ", np.size(min_indices))
+y_max = yvals[max_indices]
+t_max = tvals[max_indices]
+y_min = yvals[min_indices]
+t_min = tvals[min_indices]
+if len(t_max) > 1: 
+    max_fit = np.polyfit(t_max, y_max, 1)  
+    max_line = np.polyval(max_fit, tvals)  
+if len(t_min) > 1:  
+    min_fit = np.polyfit(t_min, y_min, 1)  
+    min_line = np.polyval(min_fit, tvals)  
+plt.scatter(tvals, yvals)
+plt.scatter(t_max, y_max, color='orange')
+plt.scatter(t_min, y_min, color='red')
+if len(t_max) > 1:
+    plt.plot(tvals, max_line, color='orange', linestyle='--', label='Maxima Fit')
+    max_slope, max_intercept = max_fit
+    print(f"Line of best fit for maxima: y = {max_slope:.4f}x + {max_intercept:.4f}")
+if len(t_min) > 1:
+    plt.plot(tvals, min_line, color='red', linestyle='--', label='Minima Fit')
+    min_slope, min_intercept = min_fit
+    print(f"Line of best fit for minima: y = {min_slope:.4f}x + {min_intercept:.4f}")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration (m/s^2)")
+plt.title("Harmonic Motion Data 60° w/maxima & minima")
 plt.show()
