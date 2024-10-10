@@ -110,6 +110,14 @@ plt.title("Simple Harmonic Motion Fit 90°")
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
 plt.show()
+residuals = yvals - ypred
+fig2 = plt.figure(figsize=(8, 6))
+plt.scatter(tvals, residuals)
+plt.axhline(0, color='red', linestyle='--')
+plt.title("Simple Harmonic Motion 90° Residuals")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration Residuals (m/s^2)")
+plt.show()
 def vdamped_a(t, A, B, w, phi, beta):
     return B + A * np.exp(-beta*t) * ((beta**2-w**2)*np.cos(w*t + phi)+2*beta*w*np.sin(w*t+phi))
 oscillator_model = vdamped_a
@@ -133,6 +141,14 @@ plt.plot(tvals, ypred, color='orange')
 plt.title("Damped Harmonic Motion Fit 90°")
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
+plt.show()
+residuals = yvals - ypred
+fig2 = plt.figure(figsize=(8, 6))
+plt.scatter(tvals, residuals)
+plt.axhline(0, color='red', linestyle='--')
+plt.title("Damped Harmonic Motion 90° Residuals")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration Residuals (m/s^2)")
 plt.show()
 
 #Harmonic Oscillation (60 degree case)
@@ -187,6 +203,14 @@ plt.title("Simple Harmonic Motion Fit 60°")
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
 plt.show()
+residuals = yvals - ypred
+fig2 = plt.figure(figsize=(8, 6))
+plt.scatter(tvals, residuals)
+plt.axhline(0, color='red', linestyle='--')
+plt.title("Simple Harmonic Motion 60° Residuals")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration Residuals (m/s^2)")
+plt.show()
 def vdamped_a(t, A, B, w, phi, beta):
     return B + A * np.exp(-beta*t) * ((beta**2-w**2)*np.cos(w*t + phi)+2*beta*w*np.sin(w*t+phi))
 oscillator_model = vdamped_a
@@ -210,6 +234,14 @@ plt.plot(tvals, ypred, color='orange')
 plt.title("Damped Harmonic Motion Fit 60°")
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
+plt.show()
+residuals = yvals - ypred
+fig2 = plt.figure(figsize=(8, 6))
+plt.scatter(tvals, residuals)
+plt.axhline(0, color='red', linestyle='--')
+plt.title("Damped Harmonic Motion 60° Residuals")
+plt.xlabel("Time (s)")
+plt.ylabel("Acceleration Residuals (m/s^2)")
 plt.show()
 import numpy as np
 import scipy.optimize as opt
@@ -272,4 +304,23 @@ if len(t_min) > 1:
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
 plt.title("Maxima & Minima w/Line of Best")
+plt.show()
+if len(t_max) > 1:
+    max_residuals = y_max - np.polyval(max_fit, t_max)
+if len(t_min) > 1:
+    min_residuals = y_min - np.polyval(min_fit, t_min)
+fig, axs = plt.subplots(2, 1, figsize=(10, 8))
+if len(t_max) > 1:
+    axs[0].scatter(t_max, max_residuals, color='orange')
+    axs[0].axhline(0, color='black', linestyle='--')
+    axs[0].set_title("Residuals for Maxima Fit")
+    axs[0].set_xlabel("Time (s)")
+    axs[0].set_ylabel("Residuals (m/s^2)")
+if len(t_min) > 1:
+    axs[1].scatter(t_min, min_residuals, color='red')
+    axs[1].axhline(0, color='black', linestyle='--')
+    axs[1].set_title("Residuals for Minima Fit")
+    axs[1].set_xlabel("Time (s)")
+    axs[1].set_ylabel("Residuals (m/s^2)")
+plt.tight_layout()
 plt.show()
