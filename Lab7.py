@@ -271,5 +271,5 @@ if len(t_min) > 1:
     print(f"Line of best fit for minima: y = {min_slope:.4f}x + {min_intercept:.4f}")
 plt.xlabel("Time (s)")
 plt.ylabel("Acceleration (m/s^2)")
-plt.title("Harmonic Motion Data 60° w/maxima & minima")
+plt.title("Maxima & Minima w/Line of Best")
 plt.show()
